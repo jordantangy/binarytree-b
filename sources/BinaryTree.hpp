@@ -23,17 +23,22 @@ namespace ariel {
 
   }node;
 
+/*
+this function copies a tree by getting the orignal node from 
+the tree we want to copy and traverse the tree in order to get each node and 
+copy it
+*/
 void copy_tree(node& origin, node& toCopyTo){
   if(origin.left != NULL) {
     node* copied = new node(origin.left->val);
     toCopyTo.left = copied;
-    node& left = *(origin.left);
+    node& left = *(origin).left;
     copy_tree(left ,*toCopyTo.left);
   }
   if(origin.right != NULL) {
     node* copied = new node(origin.right->val);
     toCopyTo.right = copied;
-    node& right = *(origin.right);
+    node& right = *(origin).right;
     copy_tree(right,*toCopyTo.right);
   }
 }
@@ -41,7 +46,7 @@ void copy_tree(node& origin, node& toCopyTo){
 /*
 recurse on the left side of the tree and check if the value you are looking for is equal to 
 the value of the node you are looking at. Same on the right side. If the value was found
-return a pointer to the node found. If not , the the tree was traversed and no match was found, then return NULL
+return a pointer to the node found. If not , the tree was traversed and no match was found, then return NULL
 */
 node* find_node(const T& value , node* toFind){
 
@@ -53,13 +58,17 @@ node* find_node(const T& value , node* toFind){
     }
   node* left_node = find_node(value,toFind->BinaryTree::node::left);
 
-  if(left_node){
+  if(left_node != NULL){
     return left_node;
-    }
+  }
 
   node* right_node = find_node(value,toFind->BinaryTree::node::right);
 
-  return right_node;
+  if(right_node != NULL){
+    return right_node;
+  }
+
+  return NULL;
 }
 node* root;
 
@@ -81,7 +90,10 @@ BinaryTree(BinaryTree&& bt) noexcept {
         bt.root = NULL;
 }
 
-
+/*
+Operator "=" to assign a tree to another tree.
+The function copy_tree is used in order to copy the tree (i.e to assign an existing tree to another one).
+*/
  BinaryTree& operator=(BinaryTree bt){
      if(this == &bt){
          return *this;
@@ -111,7 +123,14 @@ BinaryTree& add_root(T value){
         return *this;
 }
 
-
+/*
+Add a node to the left.
+First check if the node we want to add to the left of the current node exists 
+in the tree. If not, throw an exception, otherwise, get a pointer to the node
+we want to add the node to, if the left pointer of the node is null add , create a new node 
+and assign it to the left side. Otherwise, update the value on the left side.
+The function to add to the right is similar.
+*/
 BinaryTree& add_left(const T& current,T left_child){
 
   if(!(find_node(current,root))){
@@ -215,18 +234,23 @@ bool operator!=(const iterator &it) const {
   return ans;
 }
 
-void evaluate_queue(node* n,const string &type){
+/*
+A recursive function which adds element to the queue (in order to iterate over the queue once it's complete).
+Depending on the way we want to iterate over the tree, pointers to relevant nodes are 
+added consequently.
+*/
+void evaluate_queue(node* n,const string& order){
   if(n == NULL){return;}
 
-  if(type == "preorder") {
+  if(order == "preorder") {
     q.push(n);
     }
-  evaluate_queue(n->left ,type);
-  if(type == "inorder"){
+  evaluate_queue(n->left ,order);
+  if(order == "inorder"){
     q.push(n);
   }
-  evaluate_queue(n->right ,type);
-  if(type == "postorder") {
+  evaluate_queue(n->right ,order);
+  if(order == "postorder") {
     q.push(n);
   }
 
