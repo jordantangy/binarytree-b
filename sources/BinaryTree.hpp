@@ -127,7 +127,7 @@ BinaryTree& add_root(T value){
 Add a node to the left.
 First check if the node we want to add to the left of the current node exists 
 in the tree. If not, throw an exception, otherwise, get a pointer to the node
-we want to add the node to, if the left pointer of the node is null add , create a new node 
+we want to add the node to, if the left pointer of the node is null , create a new node 
 and assign it to the left side. Otherwise, update the value on the left side.
 The function to add to the right is similar.
 */
